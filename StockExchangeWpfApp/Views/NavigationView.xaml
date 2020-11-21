@@ -1,0 +1,116 @@
+﻿<UserControl
+    x:Class="StockExchangeWpfApp.Views.NavigationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cm="clr-namespace:StockExchangeWpfApp.ViewItems"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:StockExchangeWpfApp.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <cm:ChartItemType x:Key="ChartItemType" />
+        <Style x:Key="NVTextBox" TargetType="TextBox">
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel>
+                            <AdornedElementPlaceholder x:Name="placeholder" />
+                            <TextBlock
+                                FontSize="12"
+                                Foreground="Red"
+                                Text="{Binding ElementName=placeholder, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}" />
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="Background" Value="Red" />
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="NVLabel" TargetType="Label">
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="NVButton" TargetType="Button">
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="Width" Value="70" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ScrollViewer BorderBrush="DarkGray" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Items}">
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                        <Setter Property="Margin" Value="2" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button
+                            Command="{Binding ItemClick}"
+                            Content="{Binding Name}"
+                            Foreground="DarkBlue">
+                            <Button.Template>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Grid x:Name="grid">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Cursor" Value="Hand" />
+                                            <Setter Property="FontWeight" Value="Bold" />
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter Property="FontWeight" Value="Normal" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <StackPanel Grid.Row="1">
+            <TextBox Style="{StaticResource NVTextBox}" Text="{Binding SelectedItem.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Label Content="Заголовок графика" Style="{StaticResource NVLabel}" />
+            <TextBox Style="{StaticResource NVTextBox}" Text="{Binding SelectedItem.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Label Content="Заголовок X" Style="{StaticResource NVLabel}" />
+            <TextBox Style="{StaticResource NVTextBox}" Text="{Binding SelectedItem.AxisXTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Label Content="Заголовок Y" Style="{StaticResource NVLabel}" />
+            <TextBox Style="{StaticResource NVTextBox}" Text="{Binding SelectedItem.AxisYTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Label Content="Тип графика" Style="{StaticResource NVLabel}" />
+            <ComboBox
+                Margin="2"
+                ItemsSource="{Binding Source={StaticResource ChartItemType}, Path=ChartTypes}"
+                SelectedValue="{Binding SelectedItem.ChartType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button
+                    Command="{Binding SaveCommand}"
+                    Content="Сохранить"
+                    Style="{StaticResource NVButton}" />
+                <Button
+                    Command="{Binding DeleteCommand}"
+                    Content="Удалить"
+                    Style="{StaticResource NVButton}" />
+                <Button
+                    Command="{Binding AddNewCommand}"
+                    Content="Новый"
+                    Style="{StaticResource NVButton}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>
