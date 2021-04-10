@@ -28,10 +28,7 @@ namespace StockExchangeComon.ViewModels
         {
             this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
-        public BaseCollection() : base()
-        {
-
-        }
+       
         public BaseCollection(IEnumerable<TEntity> collection) :
             base(collection)
         {
