@@ -1,2 +1,2 @@
 # StockExchange
-Part of StockExchangeWorkflow project
+WPF base part of StockExchangeWorkflow project
